@@ -57,10 +57,12 @@ repositories {
 		url = uri("https://repo.codemc.org/repository/maven-public/")
 	}
 
+	/*
 	maven {
 		name = "totallyavirus"
 		url = uri("https://repo.totallyavir.us/maven-public")
 	}
+	*/
 
 	maven {
 		name = "sponge"
@@ -113,8 +115,8 @@ dependencies {
 	implementation("net.kyori:adventure-extra-kotlin:4.12.0")
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_17
-java.targetCompatibility = JavaVersion.VERSION_17
+java.sourceCompatibility = JavaVersion.VERSION_18
+java.targetCompatibility = JavaVersion.VERSION_18
 
 tasks {
 	assemble {
@@ -134,7 +136,7 @@ tasks {
 
 	compileKotlin {
 		kotlinOptions {
-			jvmTarget = "17"
+			jvmTarget = "18"
 		}
 	}
 
@@ -158,6 +160,6 @@ bukkit {
 	version = project_version
 	authors = listOf("CrewCo Team", *project_owners.split(",").toTypedArray())
 	main = "$project_package.$project_plugin_class"
-	apiVersion = "1.19"
-	depend = listOf("LuckPerms")
+	apiVersion = "1.20"
+	//depend = listOf("LuckPerms")
 }
