@@ -8,9 +8,14 @@ import net.crewco.AnglesAndDevils.Utils.Managers.EffectsManager
 import net.crewco.AnglesAndDevils.Utils.Managers.PlayerStatsManager
 import net.crewco.AnglesAndDevils.Utils.Managers.PortalManager
 import net.crewco.AnglesAndDevils.Utils.Managers.WorldManager
+import net.crewco.AnglesAndDevils.commands.AdminCommands.getItemCommands
 import net.crewco.AnglesAndDevils.listeners.CombatSystem.ComBatLogPenalty
 import net.crewco.AnglesAndDevils.listeners.CombatSystem.DamageListener
 import net.crewco.AnglesAndDevils.listeners.CombatSystem.DeathListener
+import net.crewco.AnglesAndDevils.listeners.CombatSystem.HaloHornLossPrevention
+import net.crewco.AnglesAndDevils.listeners.CombatSystem.clronDeath
+import net.crewco.AnglesAndDevils.listeners.CustomItemListeners.Glasses.GlassesInteractListener
+import net.crewco.AnglesAndDevils.listeners.CustomItemListeners.PortalItem.PortalClickListener
 import net.crewco.AnglesAndDevils.listeners.SystemListeners.AssignTeams
 import net.crewco.AnglesAndDevils.listeners.SystemListeners.InventoryCanceler
 import net.crewco.AnglesAndDevils.listeners.SystemListeners.MobSpawnPreventionListener
@@ -36,7 +41,7 @@ class Startup : CrewCoPlugin() {
 		lateinit var combatLogManager: CombatLogManager
 		lateinit var angelTeam:MutableMap<UUID,String>
 		lateinit var devilTeam:MutableMap<UUID,String>
-		lateinit var mediumTeam:MutableMap<UUID,String>
+
 		lateinit var mortalTeam:MutableMap<UUID,String>
 	}
 	override suspend fun onEnableAsync() {
@@ -46,7 +51,6 @@ class Startup : CrewCoPlugin() {
 		plugin = this
 		angelTeam = mutableMapOf()
 		devilTeam = mutableMapOf()
-		mediumTeam = mutableMapOf()
 		mortalTeam = mutableMapOf()
 
 
@@ -70,6 +74,10 @@ class Startup : CrewCoPlugin() {
 		dataManager = DataManager(this)
 		combatLogManager = CombatLogManager(this)
 
+
+		//System Commands
+		registerCommands(getItemCommands::class)
+
 		//System on Start Events
 
 		//Create the Worlds
@@ -82,7 +90,14 @@ class Startup : CrewCoPlugin() {
 		portalManager = PortalManager(angelsWorld,devilsWorld)
 
 		// Combat System
-		registerListeners(ComBatLogPenalty::class,DamageListener::class,DeathListener::class)
+		registerListeners(ComBatLogPenalty::class,DamageListener::class,DeathListener::class,clronDeath::class,HaloHornLossPrevention::class)
+
+
+		//Glasses System
+		registerListeners(GlassesInteractListener::class)
+
+		//Portal System
+		registerListeners(PortalClickListener::class)
 
 
 

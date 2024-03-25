@@ -1,58 +1,95 @@
 package net.crewco.AnglesAndDevils.listeners.CombatSystem
 
-import net.crewco.AnglesAndDevils.Startup
 import net.crewco.AnglesAndDevils.Startup.Companion.PStats
-import net.crewco.AnglesAndDevils.Startup.Companion.angelTeam
 import net.crewco.AnglesAndDevils.Startup.Companion.combatLogManager
-import net.crewco.AnglesAndDevils.Startup.Companion.devilTeam
-import net.crewco.AnglesAndDevils.Startup.Companion.mediumTeam
-import net.crewco.AnglesAndDevils.Startup.Companion.mortalTeam
-import org.bukkit.entity.Entity
-import org.bukkit.entity.EntityCategory
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Mob
+import net.crewco.AnglesAndDevils.listeners.CustomItemListeners.Glasses.Glassesutils
 import org.bukkit.entity.Player
-import org.bukkit.entity.SpawnCategory
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.entity.EntityDamageEvent
 
-class DamageListener: Listener {
+class DamageListener : Listener {
 	@EventHandler
-	fun onDamage(e:EntityDamageByEntityEvent){
-		if (e.damager is Player){
-			val player = e.damager as Player
-			val target = e.entity
+	fun onDamage(e: EntityDamageByEntityEvent) {
+		if (e.damager is Player && e.entity is Player) {
+			val damager = e.damager as Player
+			val target = e.entity as Player
+			val glassesutils = Glassesutils()
 
-			if (target is Player){
-				if (angelTeam.containsKey(target.uniqueId) && angelTeam.containsKey(player.uniqueId)){
-					e.isCancelled = true
-				}else if (devilTeam.containsKey(target.uniqueId) && devilTeam.containsKey(player.uniqueId)){
-					e.isCancelled = true
-				}else if (!angelTeam.containsKey(target.uniqueId) && !mortalTeam.containsKey(target.uniqueId) && devilTeam.containsKey(target.uniqueId) && PStats.getPlayerTeam(player.uniqueId.toString()) == "Angles"){ // Checks to see if the target is a Devil/Medium
-					val damage = e.damage + 5
-					e.damage = damage
+			val damagerTeam = PStats.getPlayerTeam(damager.uniqueId.toString())
+			val targetTeam = PStats.getPlayerTeam(target.uniqueId.toString())
 
-					// Adds them to the combat log
-					if (!combatLogManager.isInCombat(target)){
-						combatLogManager.logCombatStart(target,player)
+			if (damagerTeam == "Mortals" && targetTeam == "Mortals") {
+				e.isCancelled = false // Mortals can hurt each other
+
+				if (!combatLogManager.isInCombat(damager)){
+					combatLogManager.logCombatStart(target,damager)
+					combatLogManager.logCombatStart(damager,target)
+				}else{
+					combatLogManager.logCombatStart(target, damager)
+					combatLogManager.logCombatStart(damager,target)
+				}
+
+			} else if (damagerTeam == "Mortals" && targetTeam == "Angels" || targetTeam == "Devils") {
+				e.isCancelled = false // Mediums can hurt Mortals, Angels, and Devils
+
+				if (!combatLogManager.isInCombat(damager)){
+					combatLogManager.logCombatStart(target,damager)
+					combatLogManager.logCombatStart(damager,target)
+				}else{
+					combatLogManager.logCombatStart(target, damager)
+					combatLogManager.logCombatStart(damager,target)
+				}
+
+			} else if (damagerTeam == "Angels" && targetTeam == "Mortals") {
+				// Angels can't hurt Mortals without the glasses on
+				if (!glassesutils.hasGlassesOn(target)){
+					e.isCancelled = true
+				}else{
+					e.damage += 5 // Angels deal more damage to Mediums and Devils
+					if (!combatLogManager.isInCombat(damager)){
+						combatLogManager.logCombatStart(target,damager)
+						combatLogManager.logCombatStart(damager,target)
 					}else{
-						combatLogManager.logCombatStart(target,player)
+						combatLogManager.logCombatStart(target, damager)
+						combatLogManager.logCombatStart(damager,target)
 					}
-				}else if (!devilTeam.containsKey(target.uniqueId) && !mortalTeam.containsKey(target.uniqueId) && angelTeam.containsKey(target.uniqueId) && PStats.getPlayerTeam(player.uniqueId.toString()) == "Devils"){ // Checks to see if the target is an Angel/Medium
-					val damage = e.damage + 5
-					e.damage = damage
+				}
 
-					//Adds them to the combat log
-					if (!combatLogManager.isInCombat(target)){
-						combatLogManager.logCombatStart(target,player)
-					}else{
-						combatLogManager.logCombatStart(target,player)
-					}
-				}else if (!devilTeam.containsKey(target.uniqueId) && !angelTeam.containsKey(target.uniqueId) && mortalTeam.containsKey(target.uniqueId) && !mediumTeam.containsKey(target.uniqueId)){ //Checks to see if the player is a Mortal or not
+			} else if (damagerTeam == "Devils" && targetTeam == "Mortals") {
+				//Devils can't hurt Mortals without the glasses on
+				if (!glassesutils.hasGlassesOn(target)){
 					e.isCancelled = true
+				}else{
+					e.damage += 5 // Angels deal more damage to Mediums and Devils
+					if (!combatLogManager.isInCombat(damager)){
+						combatLogManager.logCombatStart(target,damager)
+						combatLogManager.logCombatStart(damager,target)
+					}else{
+						combatLogManager.logCombatStart(target, damager)
+						combatLogManager.logCombatStart(damager,target)
+					}
+				}
+
+			} else if (damagerTeam == "Angels" && targetTeam == "Angels" || damagerTeam == "Devils" && targetTeam == "Devils") {
+				e.isCancelled = true // Angels can't hurt Angels
+			} else if (damagerTeam == "Devils" && targetTeam == "Angels") {
+				e.damage += 5 // Devils deal more damage to Mediums and Angels
+				if (!combatLogManager.isInCombat(damager)){
+					combatLogManager.logCombatStart(target,damager)
+					combatLogManager.logCombatStart(damager,target)
+				}else{
+					combatLogManager.logCombatStart(target, damager)
+					combatLogManager.logCombatStart(damager,target)
+				}
+			} else if (damagerTeam == "Angels" && targetTeam == "Devils") {
+				e.damage += 5 // Angels deal more damage to Mediums and Devils
+				if (!combatLogManager.isInCombat(damager)){
+					combatLogManager.logCombatStart(target,damager)
+					combatLogManager.logCombatStart(damager,target)
+				}else{
+					combatLogManager.logCombatStart(target, damager)
+					combatLogManager.logCombatStart(damager,target)
 				}
 			}
 		}

@@ -61,7 +61,8 @@ class CombatLogManager(private val plugin: JavaPlugin) {
 		val taskId = object : BukkitRunnable() {
 			override fun run() {
 				if (!isInCombat(player)) {
-					player.sendMessage("${ChatColor.RED}Your combat log has expired.")
+					//player.sendMessage("${ChatColor.RED}Your combat log has expired.")
+					sendActionBar(player,"${ChatColor.RED}Your combat log has expired.")
 					cancel()
 					cancelCombatTask(player)
 				} else {

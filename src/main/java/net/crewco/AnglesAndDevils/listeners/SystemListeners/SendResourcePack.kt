@@ -7,6 +7,6 @@ import org.bukkit.event.player.PlayerJoinEvent
 class SendResourcePack: Listener {
 	@EventHandler
 	fun onJoin(e:PlayerJoinEvent){
-		e.player.setResourcePack("https://resource.crewco.org/resource-pack/Angles&Devils.zip")
+		e.player.setResourcePack("https://resource.crewco.org/resource-pack/Angels&Devils.zip")
 	}
 }

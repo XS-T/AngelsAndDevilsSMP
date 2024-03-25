@@ -5,9 +5,11 @@ import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.entity.Item
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
+import org.bukkit.util.ChatPaginator.ChatPage
 import java.util.*
 
 class C_Items {
@@ -64,7 +66,7 @@ class C_Items {
 		haloHornsMeta.setCustomModelData(2)
 
 		haloHornsMeta.addEnchant(Enchantment.BINDING_CURSE,1,true)
-		haloHornsMeta.addAttributeModifier(Attribute.GENERIC_ARMOR, AttributeModifier(UUID.randomUUID(),"+40 Armor", 40.0,AttributeModifier.Operation.ADD_NUMBER,EquipmentSlot.HEAD))
+		haloHornsMeta.addAttributeModifier(Attribute.GENERIC_ARMOR, AttributeModifier(UUID.randomUUID(),"+20 Armor", 20.0,AttributeModifier.Operation.ADD_NUMBER,EquipmentSlot.HEAD))
 		haloHornsMeta.itemFlags.add(ItemFlag.HIDE_ENCHANTS)
 		haloHornsMeta.itemFlags.add(ItemFlag.HIDE_ATTRIBUTES)
 
@@ -82,11 +84,37 @@ class C_Items {
 		glassesMeta.setCustomModelData(4)
 
 		glassesMeta.addEnchant(Enchantment.MENDING,1,true)
-		glassesMeta.addAttributeModifier(Attribute.GENERIC_ARMOR, AttributeModifier(UUID.randomUUID(),"+6 Armor", 40.0,AttributeModifier.Operation.ADD_NUMBER,EquipmentSlot.HEAD))
+		glassesMeta.addAttributeModifier(Attribute.GENERIC_ARMOR, AttributeModifier(UUID.randomUUID(),"+6 Armor", 6.0,AttributeModifier.Operation.ADD_NUMBER,EquipmentSlot.HEAD))
 		glassesMeta.itemFlags.add(ItemFlag.HIDE_ENCHANTS)
 		glassesMeta.itemFlags.add(ItemFlag.HIDE_ATTRIBUTES)
 
 		glasses.itemMeta = glassesMeta
 		return glasses
+	}
+
+	fun AngelPortalItem():ItemStack{
+		val anglePortalItem = ItemStack(Material.GOLDEN_HOE)
+		val anglePortalItemMeta = anglePortalItem.itemMeta
+
+		anglePortalItemMeta.setCustomModelData(5)
+
+		anglePortalItemMeta.setDisplayName("${ChatColor.GOLD} Angel Portal Item")
+		anglePortalItemMeta.addEnchant(Enchantment.MENDING,1,true)
+		anglePortalItemMeta.itemFlags.add(ItemFlag.HIDE_ENCHANTS)
+		anglePortalItem.itemMeta = anglePortalItemMeta
+		return anglePortalItem
+	}
+
+	fun DevilPortalItem():ItemStack{
+		val devilPortalItem = ItemStack(Material.GOLDEN_HOE)
+		val devilPortalItemMeta = devilPortalItem.itemMeta
+
+		devilPortalItemMeta.setCustomModelData(6)
+
+		devilPortalItemMeta.setDisplayName("${ChatColor.DARK_RED} Devil Portal Item")
+		devilPortalItemMeta.addEnchant(Enchantment.MENDING,1,true)
+		devilPortalItemMeta.itemFlags.add(ItemFlag.HIDE_ENCHANTS)
+		devilPortalItem.itemMeta = devilPortalItemMeta
+		return devilPortalItem
 	}
 }

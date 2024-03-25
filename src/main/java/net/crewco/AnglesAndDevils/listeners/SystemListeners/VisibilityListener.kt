@@ -1,8 +1,10 @@
 package net.crewco.AnglesAndDevils.listeners.SystemListeners
 
 import com.google.inject.Inject
+import net.crewco.AnglesAndDevils.CustomItems.C_Items
 import net.crewco.AnglesAndDevils.Startup
 import net.crewco.AnglesAndDevils.Startup.Companion.PStats
+import net.crewco.AnglesAndDevils.listeners.CustomItemListeners.Glasses.Glassesutils
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -10,31 +12,39 @@ import org.bukkit.event.player.PlayerJoinEvent
 
 
 class VisibilityListener @Inject constructor(private val plugin: Startup) : Listener {
-	@EventHandler
-	fun onSee(e:PlayerJoinEvent){
-		val player = e.player
 
-		//Hides the Angles and Devils from the Mortal Players
-		if (PStats.getPlayerTeam(player.uniqueId.toString()) == "Mortals"){
-			for(deitys in Bukkit.getOnlinePlayers()){
-				if(deitys == player){
-					continue
+	@EventHandler
+	fun onPlayerJoin(event: PlayerJoinEvent) {
+		val player = event.player
+		val glassesUtils = Glassesutils()
+
+		val targetTeam = PStats.getPlayerTeam(player.uniqueId.toString())
+		val glasses = C_Items().glasses()
+
+		for (onlinePlayer in Bukkit.getOnlinePlayers()) {
+			val onlineTeam = PStats.getPlayerTeam(onlinePlayer.uniqueId.toString())
+			if (targetTeam == "Mortals"){
+				player.showPlayer(plugin,player)
+				if (glassesUtils.hasGlassesOn(player)){
+					if (onlineTeam == "Angels" || onlineTeam == "Devils"){
+						player.showPlayer(plugin,onlinePlayer)
+					}
 				}else{
-					if (PStats.getPlayerTeam(deitys.uniqueId.toString()) == "Devils" || PStats.getPlayerTeam(deitys.uniqueId.toString()) == "Angles"){
-						player.hidePlayer(plugin,deitys)
+					if (onlineTeam == "Angels" || onlineTeam == "Devils"){
+						player.hidePlayer(plugin,onlinePlayer)
 					}
 				}
-			}
-		}else{
-			//Does the same thing but for a angle or devil is joining
-			if (PStats.getPlayerTeam(player.uniqueId.toString()) != "Mortals")
-			for (mortal in Bukkit.getOnlinePlayers()){
-				if (mortal == player){
-					continue
-				}else{
-					if (PStats.getPlayerTeam(mortal.uniqueId.toString()) == "Mortals"){
-						player.hidePlayer(plugin,player)
+
+			}else if (targetTeam == "Angels" || targetTeam == "Devils"){
+				player.hidePlayer(plugin,player)
+
+				if (onlineTeam == "Mortals"){
+					onlinePlayer.hidePlayer(plugin,player)
+					if (glassesUtils.hasGlassesOn(onlinePlayer)){
+						player.showPlayer(plugin,onlinePlayer)
+						onlinePlayer.showPlayer(plugin,player)
 					}
+					player.sendMessage("DEBUG 5")
 				}
 			}
 		}
