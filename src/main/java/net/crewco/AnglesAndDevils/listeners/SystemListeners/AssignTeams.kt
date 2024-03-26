@@ -6,6 +6,7 @@ import net.crewco.AnglesAndDevils.Startup.Companion.angelTeam
 import net.crewco.AnglesAndDevils.Startup.Companion.devilTeam
 import net.crewco.AnglesAndDevils.Startup.Companion.mortalTeam
 import net.crewco.AnglesAndDevils.Startup.Companion.plugin
+import net.crewco.AnglesAndDevils.Startup.Companion.potionEffectHandler
 import net.crewco.AnglesAndDevils.Startup.Companion.systemStr
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -66,11 +67,17 @@ class AssignTeams : Listener {
 					if (player.inventory.helmet != customItems.halo_item()){
 						player.inventory.helmet = customItems.halo_item()
 					}
+					if (!potionEffectHandler.hasPotionEffects(player)){
+						potionEffectHandler.addPotionEffect(player)
+					}
 				}
 				"Devils" -> {
 					devilTeam[player.uniqueId] = "Devils"
 					if (player.inventory.helmet != customItems.devil_horns()){
 						player.inventory.helmet = customItems.devil_horns()
+					}
+					if (!potionEffectHandler.hasPotionEffects(player)){
+						potionEffectHandler.addPotionEffect(player)
 					}
 				}
 				"Mortals" -> {

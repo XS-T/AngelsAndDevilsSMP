@@ -44,7 +44,6 @@ class VisibilityListener @Inject constructor(private val plugin: Startup) : List
 						player.showPlayer(plugin,onlinePlayer)
 						onlinePlayer.showPlayer(plugin,player)
 					}
-					player.sendMessage("DEBUG 5")
 				}
 			}
 		}

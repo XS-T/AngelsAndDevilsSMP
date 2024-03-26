@@ -35,6 +35,12 @@ class CooldownManager(private val plugin: JavaPlugin) {
 		return "0 seconds" // No cooldown
 	}
 
+
+	fun hasEnded(player: Player): Boolean {
+		val cooldown = getRemainingCooldown(player)
+		return cooldown.contains("0")
+	}
+
 	fun removeCooldown(player: Player) {
 		cooldowns.remove(player.uniqueId)
 	}

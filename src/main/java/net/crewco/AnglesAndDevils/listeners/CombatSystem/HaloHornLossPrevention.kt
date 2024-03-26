@@ -18,32 +18,31 @@ class HaloHornLossPrevention @Inject constructor(private val plugin: Startup) : 
 		val drops = e.drops
 		val helper = DeathHelper()
 
-		for (item in drops) {
-			if (helper.isCustomItem(item)){
-				e.itemsToKeep.add(item)
-			}else{
-				player.sendMessage("DEBUG-isCustom: ${helper.isCustomItem(item)}")
-			}
 
-			if (helper.isHalo(item)){
-				e.itemsToKeep.add(item)
-			}else{
-				player.sendMessage("DEBUG-isHalo: ${helper.isHalo(item)}")
-			}
-
-			if (helper.isGlasses(item)){
-				for (onlinePlayer in Bukkit.getOnlinePlayers()) {
-					if (onlinePlayer != player &&
-						(PStats.getPlayerTeam(onlinePlayer.uniqueId.toString()) == "Angels" ||
-								PStats.getPlayerTeam(onlinePlayer.uniqueId.toString()) == "Devils")) {
-						player.hidePlayer(plugin, onlinePlayer)
-					}
+		try {
+			for (item in drops) {
+				if (helper.isCustomItem(item)) {
+					e.itemsToKeep.add(item)
+					e.drops.remove(item)
 				}
-				player.sendMessage("$systemStr You can no longer see angels and Devils")
 
-			}else{
-				player.sendMessage("DEBUG-isGlasses: ${helper.isGlasses(item)}")
+				if (helper.isHalo(item)) {
+					e.itemsToKeep.add(item)
+					e.drops.remove(item)
+				}
+
+				if (helper.isGlasses(item)) {
+					for (onlinePlayer in Bukkit.getOnlinePlayers()) {
+						if (onlinePlayer != player &&
+							(PStats.getPlayerTeam(onlinePlayer.uniqueId.toString()) == "Angels" ||
+									PStats.getPlayerTeam(onlinePlayer.uniqueId.toString()) == "Devils")
+						) {
+							player.hidePlayer(plugin, onlinePlayer)
+						}
+					}
+					player.sendMessage("$systemStr You can no longer see angels and Devils")
+				}
 			}
-		}
+		}catch (_:ConcurrentModificationException){}
 	}
 }

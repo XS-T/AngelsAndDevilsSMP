@@ -30,8 +30,16 @@ class InventoryCanceler @Inject constructor(private val plugin: Startup) :Listen
 				player.sendMessage("$systemStr You can not take this off")
 			} else if (glassesutils.hasGlassesOn(player)) {
 				if (combatLogManager.isInCombat(player)) {
-					e.isCancelled = true
-					player.sendMessage("$systemStr You are in Combat and cannot take these off")
+					try {
+						if (item!!.itemMeta.customModelData == 4 && glasses.itemMeta.customModelData == 4){
+							e.isCancelled = true
+							player.sendMessage("$systemStr You are in Combat and cannot take these off")
+						}else{
+							e.isCancelled = false
+						}
+					}catch (_:IllegalStateException){
+
+					}catch (_:NullPointerException){}
 				}else{
 					if (slot == 39) {
 						e.isCancelled = false

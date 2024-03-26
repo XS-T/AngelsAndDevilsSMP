@@ -8,6 +8,7 @@ import net.crewco.AnglesAndDevils.Utils.Managers.EffectsManager
 import net.crewco.AnglesAndDevils.Utils.Managers.PlayerStatsManager
 import net.crewco.AnglesAndDevils.Utils.Managers.PortalManager
 import net.crewco.AnglesAndDevils.Utils.Managers.WorldManager
+import net.crewco.AnglesAndDevils.Utils.potionEffectHandler
 import net.crewco.AnglesAndDevils.commands.AdminCommands.getItemCommands
 import net.crewco.AnglesAndDevils.listeners.CombatSystem.ComBatLogPenalty
 import net.crewco.AnglesAndDevils.listeners.CombatSystem.DamageListener
@@ -17,10 +18,12 @@ import net.crewco.AnglesAndDevils.listeners.CombatSystem.clronDeath
 import net.crewco.AnglesAndDevils.listeners.CustomItemListeners.Glasses.GlassesInteractListener
 import net.crewco.AnglesAndDevils.listeners.CustomItemListeners.PortalItem.PortalClickListener
 import net.crewco.AnglesAndDevils.listeners.SystemListeners.AssignTeams
+import net.crewco.AnglesAndDevils.listeners.SystemListeners.HomeWorldListener
 import net.crewco.AnglesAndDevils.listeners.SystemListeners.InventoryCanceler
 import net.crewco.AnglesAndDevils.listeners.SystemListeners.MobSpawnPreventionListener
 import net.crewco.AnglesAndDevils.listeners.SystemListeners.SendResourcePack
 import net.crewco.AnglesAndDevils.listeners.SystemListeners.VisibilityListener
+import net.crewco.AnglesAndDevils.listeners.SystemListeners.WorldChangeListeners
 import net.crewco.common.CrewCoPlugin
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -41,8 +44,8 @@ class Startup : CrewCoPlugin() {
 		lateinit var combatLogManager: CombatLogManager
 		lateinit var angelTeam:MutableMap<UUID,String>
 		lateinit var devilTeam:MutableMap<UUID,String>
-
 		lateinit var mortalTeam:MutableMap<UUID,String>
+		lateinit var potionEffectHandler: potionEffectHandler
 	}
 	override suspend fun onEnableAsync() {
 		super.onEnableAsync()
@@ -57,14 +60,15 @@ class Startup : CrewCoPlugin() {
 		//Config
 		plugin.config.options().copyDefaults()
 		plugin.saveDefaultConfig()
-		systemStr = "${ChatColor.GRAY}[${ChatColor.BLUE} System ${ChatColor.GRAY}]"
+		systemStr = "${ChatColor.GRAY}[${ChatColor.BLUE}System${ChatColor.GRAY}]"
 
 		//Events
 
 		//System Events
 		registerListeners(
 			SendResourcePack::class,
-			AssignTeams::class, InventoryCanceler::class, VisibilityListener::class, MobSpawnPreventionListener::class)
+			AssignTeams::class, InventoryCanceler::class, VisibilityListener::class,
+			MobSpawnPreventionListener::class,HomeWorldListener::class)
 
 		//System Utils
 		customItems = C_Items()
@@ -90,15 +94,19 @@ class Startup : CrewCoPlugin() {
 		portalManager = PortalManager(angelsWorld,devilsWorld)
 
 		// Combat System
-		registerListeners(ComBatLogPenalty::class,DamageListener::class,DeathListener::class,clronDeath::class,HaloHornLossPrevention::class)
+		registerListeners(ComBatLogPenalty::class,DamageListener::class,DeathListener::class,
+			clronDeath::class,HaloHornLossPrevention::class)
 
 
 		//Glasses System
 		registerListeners(GlassesInteractListener::class)
 
 		//Portal System
-		registerListeners(PortalClickListener::class)
+		registerListeners(PortalClickListener::class,WorldChangeListeners::class)
 
+		//Buffs
+		potionEffectHandler = potionEffectHandler()
+		potionEffectHandler.intilize()
 
 
 		//MySQL
