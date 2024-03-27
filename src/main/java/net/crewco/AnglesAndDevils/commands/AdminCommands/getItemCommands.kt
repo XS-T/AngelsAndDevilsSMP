@@ -10,7 +10,7 @@ import org.bukkit.entity.Player
 class getItemCommands {
 	@CommandMethod("getItem <item>")
 	@CommandDescription("Get the Custom Items")
-	@CommandPermission("adp.command.getItem.use")
+	@CommandPermission("aag.system.admin.commands.getItem.use")
 	fun trigger(player: Player,@Argument("item") item:String) {
 		val customItems = C_Items()
 		when (item) {

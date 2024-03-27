@@ -14,20 +14,16 @@ class WorldChangeListeners:Listener {
 		val team = PStats.getPlayerTeam(player.uniqueId.toString())
 		if (world.name == "angels_world" && team == "Angels"){
 			world.strikeLightning(world.spawnLocation)
-			player.isInvulnerable = true
-			player.allowFlight = true
-			player.isFlying = true
-			world.pvp = false
+			player.allowFlight = false
+			player.isFlying = false
 		}else if (world.name == "devils_world" && team == "Devils"){
 			world.strikeLightning(world.spawnLocation)
-			player.allowFlight = true
-			player.isFlying = true
+			player.allowFlight = false
+			player.isFlying = false
 		}else if (world.name == "world" && team == "Angels" || team == "Devils"){
 			player.isInvulnerable = true
 			world.strikeLightning(world.spawnLocation)
 			player.isInvulnerable = false
-			player.allowFlight = false
-			player.isFlying = false
 		}
 	}
 }

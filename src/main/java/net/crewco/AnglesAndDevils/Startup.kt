@@ -1,6 +1,8 @@
 package net.crewco.AnglesAndDevils
 
 import net.crewco.AnglesAndDevils.CustomItems.C_Items
+import net.crewco.AnglesAndDevils.Utils.ChatSystem.ChatListener
+import net.crewco.AnglesAndDevils.Utils.ChatSystem.ChatSetJoinEvent
 import net.crewco.AnglesAndDevils.Utils.Managers.CombatLogManager
 import net.crewco.AnglesAndDevils.Utils.Managers.CooldownManager
 import net.crewco.AnglesAndDevils.Utils.Managers.DataManager
@@ -8,8 +10,10 @@ import net.crewco.AnglesAndDevils.Utils.Managers.EffectsManager
 import net.crewco.AnglesAndDevils.Utils.Managers.PlayerStatsManager
 import net.crewco.AnglesAndDevils.Utils.Managers.PortalManager
 import net.crewco.AnglesAndDevils.Utils.Managers.WorldManager
-import net.crewco.AnglesAndDevils.Utils.potionEffectHandler
+import net.crewco.AnglesAndDevils.Utils.Managers.PotionEffectsManager
+import net.crewco.AnglesAndDevils.commands.AdminCommands.changeTeamCommand
 import net.crewco.AnglesAndDevils.commands.AdminCommands.getItemCommands
+import net.crewco.AnglesAndDevils.commands.SystemCommands.changeChatCommand
 import net.crewco.AnglesAndDevils.listeners.CombatSystem.ComBatLogPenalty
 import net.crewco.AnglesAndDevils.listeners.CombatSystem.DamageListener
 import net.crewco.AnglesAndDevils.listeners.CombatSystem.DeathListener
@@ -45,7 +49,8 @@ class Startup : CrewCoPlugin() {
 		lateinit var angelTeam:MutableMap<UUID,String>
 		lateinit var devilTeam:MutableMap<UUID,String>
 		lateinit var mortalTeam:MutableMap<UUID,String>
-		lateinit var potionEffectHandler: potionEffectHandler
+		lateinit var potionEffectsManager: PotionEffectsManager
+		lateinit var defaultChat:MutableMap<UUID,String>
 	}
 	override suspend fun onEnableAsync() {
 		super.onEnableAsync()
@@ -55,6 +60,7 @@ class Startup : CrewCoPlugin() {
 		angelTeam = mutableMapOf()
 		devilTeam = mutableMapOf()
 		mortalTeam = mutableMapOf()
+		defaultChat = mutableMapOf()
 
 
 		//Config
@@ -70,6 +76,9 @@ class Startup : CrewCoPlugin() {
 			AssignTeams::class, InventoryCanceler::class, VisibilityListener::class,
 			MobSpawnPreventionListener::class,HomeWorldListener::class)
 
+		//System Chat Events
+		registerListeners(ChatListener::class,ChatSetJoinEvent::class)
+
 		//System Utils
 		customItems = C_Items()
 		cooldownManager = CooldownManager(this)
@@ -80,7 +89,7 @@ class Startup : CrewCoPlugin() {
 
 
 		//System Commands
-		registerCommands(getItemCommands::class)
+		registerCommands(getItemCommands::class, changeChatCommand::class,changeTeamCommand::class)
 
 		//System on Start Events
 
@@ -105,8 +114,7 @@ class Startup : CrewCoPlugin() {
 		registerListeners(PortalClickListener::class,WorldChangeListeners::class)
 
 		//Buffs
-		potionEffectHandler = potionEffectHandler()
-		potionEffectHandler.intilize()
+		potionEffectsManager = PotionEffectsManager()
 
 
 		//MySQL

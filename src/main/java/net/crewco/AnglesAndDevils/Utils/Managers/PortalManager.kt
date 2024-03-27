@@ -30,6 +30,11 @@ class PortalManager(private val angelsWorld: World, private val devilsWorld: Wor
 		}
 	}
 
+	fun teleportToMortals(player: Player){
+		val mortalWorld = Bukkit.getWorld("world")
+		player.teleport(mortalWorld!!.spawnLocation)
+	}
+
 	fun teleportTo(player:Player){
 		val team = PStats.getPlayerTeam(player.uniqueId.toString())
 		if (team == "Angels"){

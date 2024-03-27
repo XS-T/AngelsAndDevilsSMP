@@ -5,10 +5,8 @@ import net.crewco.AnglesAndDevils.Startup.Companion.PStats
 import net.crewco.AnglesAndDevils.Startup.Companion.angelTeam
 import net.crewco.AnglesAndDevils.Startup.Companion.devilTeam
 import net.crewco.AnglesAndDevils.Startup.Companion.mortalTeam
-import net.crewco.AnglesAndDevils.Startup.Companion.plugin
-import net.crewco.AnglesAndDevils.Startup.Companion.potionEffectHandler
+import net.crewco.AnglesAndDevils.Startup.Companion.potionEffectsManager
 import net.crewco.AnglesAndDevils.Startup.Companion.systemStr
-import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -16,7 +14,6 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.inventory.ItemStack
-import java.io.File
 
 class AssignTeams : Listener {
 	private val customItems = C_Items()
@@ -67,8 +64,8 @@ class AssignTeams : Listener {
 					if (player.inventory.helmet != customItems.halo_item()){
 						player.inventory.helmet = customItems.halo_item()
 					}
-					if (!potionEffectHandler.hasPotionEffects(player)){
-						potionEffectHandler.addPotionEffect(player)
+					if (!potionEffectsManager.hasPotionEffects(player)){
+						potionEffectsManager.applyPotionEffects(player)
 					}
 				}
 				"Devils" -> {
@@ -76,8 +73,8 @@ class AssignTeams : Listener {
 					if (player.inventory.helmet != customItems.devil_horns()){
 						player.inventory.helmet = customItems.devil_horns()
 					}
-					if (!potionEffectHandler.hasPotionEffects(player)){
-						potionEffectHandler.addPotionEffect(player)
+					if (!potionEffectsManager.hasPotionEffects(player)){
+						potionEffectsManager.applyPotionEffects(player)
 					}
 				}
 				"Mortals" -> {

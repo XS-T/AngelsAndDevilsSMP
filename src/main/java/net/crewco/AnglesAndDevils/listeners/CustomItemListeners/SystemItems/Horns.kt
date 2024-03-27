@@ -7,12 +7,12 @@ import org.bukkit.inventory.ItemStack
 class Horns {
 
 	private val customItems = C_Items()
-	private val halo = customItems.halo_item()
+	private val horns = customItems.devil_horns()
 
 	fun isWearingHorns(player: Player): Boolean {
 		val inventory = player.inventory
 		try {
-			return inventory.helmet!!.itemMeta.customModelData == 1  && halo.itemMeta.customModelData == 1
+			return inventory.helmet!!.itemMeta.customModelData == 1  && horns.itemMeta.customModelData == 1
 		}catch (_:NullPointerException){
 
 		}
