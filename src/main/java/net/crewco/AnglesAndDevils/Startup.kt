@@ -13,6 +13,7 @@ import net.crewco.AnglesAndDevils.Utils.Managers.WorldManager
 import net.crewco.AnglesAndDevils.Utils.Managers.PotionEffectsManager
 import net.crewco.AnglesAndDevils.commands.AdminCommands.changeTeamCommand
 import net.crewco.AnglesAndDevils.commands.AdminCommands.getItemCommands
+import net.crewco.AnglesAndDevils.commands.AdminCommands.resetPlayerStats
 import net.crewco.AnglesAndDevils.commands.SystemCommands.changeChatCommand
 import net.crewco.AnglesAndDevils.listeners.CombatSystem.ComBatLogPenalty
 import net.crewco.AnglesAndDevils.listeners.CombatSystem.DamageListener
@@ -89,7 +90,7 @@ class Startup : CrewCoPlugin() {
 
 
 		//System Commands
-		registerCommands(getItemCommands::class, changeChatCommand::class,changeTeamCommand::class)
+		registerCommands(getItemCommands::class, changeChatCommand::class,changeTeamCommand::class,resetPlayerStats::class)
 
 		//System on Start Events
 
@@ -124,5 +125,6 @@ class Startup : CrewCoPlugin() {
 
 	override suspend fun onDisableAsync() {
 		super.onDisableAsync()
+		PStats.close()
 	}
 }
