@@ -8,25 +8,23 @@ import org.bukkit.entity.Player
 class EffectsManager {
 	fun showAngelsPortalEffect(player: Player) {
 		player.world.spawnParticle(
-			Particle.REDSTONE,
+			Particle.POOF,
 			player.location.add(0.0, 1.0, 0.0),
 			100,
 			0.1,
 			0.1,
-			0.1,
-			Particle.DustOptions(Color.RED, 1.0f)
+			0.1
 		)
 	}
 
 	fun showDevilsPortalEffect(player: Player) {
 		player.world.spawnParticle(
-			Particle.REDSTONE,
+			Particle.FLAME,
 			player.location.add(0.0, 1.0, 0.0),
 			100,
 			0.1,
 			0.1,
-			0.1,
-			Particle.DustOptions(Color.fromRGB(255, 0, 255), 1.0f)
+			0.1
 		)
 	}
 }

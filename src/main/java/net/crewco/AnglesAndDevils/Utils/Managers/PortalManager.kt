@@ -11,39 +11,59 @@ import org.bukkit.entity.Player
 class PortalManager(private val angelsWorld: World, private val devilsWorld: World) {
 
 	fun teleportToAngels(player: Player) {
-		if (player.world != angelsWorld){
+		if (player.world != angelsWorld) {
+			dataManager.saveLocation(player.uniqueId.toString(), player.location)
 			player.teleport(angelsWorld.spawnLocation)
-			dataManager.saveLocation(player.uniqueId.toString(),player.location)
-		}else{
+		} else {
 			val overWorld = Bukkit.getWorld("world")!!
-			player.teleport(overWorld.spawnLocation)
+			//player.teleport(overWorld.spawnLocation)
+			if (dataManager.getLocation(player.uniqueId.toString())?.world != null) {
+				if (dataManager.getLocation(player.uniqueId.toString())!!.world == overWorld) {
+					val playerLocation = dataManager.getLocation(player.uniqueId.toString())!!
+					val worldLocation =
+						Location(playerLocation.world, playerLocation.x, playerLocation.y, playerLocation.z)
+					player.teleport(worldLocation)
+				}else{
+					player.teleport(overWorld.spawnLocation)
+				}
+			}
 		}
 	}
 
 	fun teleportToDevils(player: Player) {
-		if (player.world != devilsWorld){
+		if (player.world != devilsWorld) {
+			dataManager.saveLocation(player.uniqueId.toString(), player.location)
 			player.teleport(devilsWorld.spawnLocation)
-			dataManager.saveLocation(player.uniqueId.toString(),player.location)
-		}else{
+		} else {
 			val overWorld = Bukkit.getWorld("world")!!
-			player.teleport(overWorld.spawnLocation)
+			//player.teleport(overWorld.spawnLocation)
+			if (dataManager.getLocation(player.uniqueId.toString())?.world != null) {
+				if (dataManager.getLocation(player.uniqueId.toString())!!.world == overWorld) {
+					val playerLocation = dataManager.getLocation(player.uniqueId.toString())!!
+					val worldLocation =
+						Location(playerLocation.world, playerLocation.x, playerLocation.y, playerLocation.z)
+					player.teleport(worldLocation)
+				}else{
+					player.teleport(overWorld.spawnLocation)
+				}
+			}
 		}
 	}
 
-	fun teleportToMortals(player: Player){
+	fun teleportToMortals(player: Player) {
 		val mortalWorld = Bukkit.getWorld("world")
 		player.teleport(mortalWorld!!.spawnLocation)
 	}
 
-	fun teleportTo(player:Player){
+	fun teleportTo(player: Player) {
 		val team = PStats.getPlayerTeam(player.uniqueId.toString())
-		if (team == "Angels"){
+		if (team == "Angels") {
 			val playerLocation = dataManager.getLocation(player.uniqueId.toString())!!
-			val mirrorLocation = Location(angelsWorld,playerLocation.x,playerLocation.y,playerLocation.z)
+			val mirrorLocation = Location(angelsWorld, playerLocation.x, playerLocation.y, playerLocation.z)
 			player.teleport(mirrorLocation)
-		}else if (team == "Devils"){
+		} else if (team == "Devils") {
 			val playerLocation = dataManager.getLocation(player.uniqueId.toString())!!
-			val mirrorLocation = Location(devilsWorld,playerLocation.x,playerLocation.y,playerLocation.z)
+			val mirrorLocation = Location(devilsWorld, playerLocation.x, playerLocation.y, playerLocation.z)
 			player.teleport(mirrorLocation)
 		}
 	}

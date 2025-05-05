@@ -12,21 +12,21 @@ class PotionEffectsManager {
 	private val angelPotionEffects = setOf(
 		PotionEffectType.ABSORPTION,
 		PotionEffectType.DOLPHINS_GRACE,
-		PotionEffectType.JUMP,
+		PotionEffectType.JUMP_BOOST,
 		PotionEffectType.REGENERATION,
 		PotionEffectType.HERO_OF_THE_VILLAGE,
-		PotionEffectType.DAMAGE_RESISTANCE,
-		PotionEffectType.INCREASE_DAMAGE
+		PotionEffectType.RESISTANCE,
+		PotionEffectType.STRENGTH
 	)
 
 	private val devilPotionEffects = setOf(
 		PotionEffectType.ABSORPTION,
 		PotionEffectType.REGENERATION,
 		PotionEffectType.BAD_OMEN,
-		PotionEffectType.FAST_DIGGING,
-		PotionEffectType.JUMP,
-		PotionEffectType.DAMAGE_RESISTANCE,
-		PotionEffectType.INCREASE_DAMAGE,
+		PotionEffectType.HASTE,
+		PotionEffectType.JUMP_BOOST,
+		PotionEffectType.RESISTANCE,
+		PotionEffectType.STRENGTH,
 		PotionEffectType.FIRE_RESISTANCE
 	)
 
